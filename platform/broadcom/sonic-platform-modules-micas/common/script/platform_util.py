@@ -31,7 +31,7 @@ import ast
 
 CONFIG_DB_PATH = "/etc/sonic/config_db.json"
 MAILBOX_DIR = "/sys/bus/i2c/devices/"
-
+BSP_COMMON_LOG_DIR = "/var/log/bsp_tech/"
 
 __all__ = [
     "strtoint",

@@ -101,6 +101,9 @@ def adddriver(name, delay):
     realname = name.lstrip().split(" ")[0]
     if delay > 0:
         time.sleep(delay)
+    if checksignaldriver(realname):
+        log_message("%%PLATFORM_BASE: WARN: %s driver already loaded, skip to modprobe" % realname)
+        return
     cmd = "modprobe %s" % name
     log_message("%%PLATFORM_BASE: adddriver cmd: %s, delay: %s" % (cmd, delay))
     for i in range(6):
@@ -121,6 +124,9 @@ def removedriver(name, delay, removeable=1):
     realname = name.lstrip().split(" ")[0]
     if not removeable:
         log_message("%%PLATFORM_BASE: driver name: %s not removeable" % realname)
+        return
+    if not checksignaldriver(realname):
+        log_message("%%PLATFORM_BASE: WARN: %s driver not loaded, skip to rmmod" % realname)
         return
 
     cmd = "rmmod %s" % realname
