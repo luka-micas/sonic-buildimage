@@ -321,4 +321,3 @@ def run():
 if __name__ == '__main__':
     log_message("enter platform base main")
     run()
-

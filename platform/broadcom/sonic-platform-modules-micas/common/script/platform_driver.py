@@ -152,7 +152,7 @@ def adddriver(name, delay):
 
 def removedriver(name, delay, removeable=1):
     realname = name.lstrip().split(" ")[0]
-    cmd = "rmmod -f %s" % realname
+    cmd = "rmmod %s" % realname
     if checksignaldriver(realname) and removeable:
         log_os_system(cmd)
     if delay > 0:
@@ -256,8 +256,6 @@ def main():
 def start():
     '''load drivers and device '''
     blacklist_driver_remove()
-    if check_driver():
-        unload_driver()
     load_driver()
 
 
