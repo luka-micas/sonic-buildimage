@@ -1037,7 +1037,6 @@ DRIVERLISTS = [
     {"name": "wb_ucd9000", "delay": 0},
     {"name": "wb_xdpe132g5c", "delay": 0},
     {"name": "firmware_driver_sysfs", "delay": 0},
-    {"name": "wb_firmware_upgrade_device", "delay": 0},
     {"name": "s3ip_sysfs", "delay": 0},
     {"name": "wb_switch_driver", "delay": 0},
     {"name": "fan_device_driver", "delay": 0},
