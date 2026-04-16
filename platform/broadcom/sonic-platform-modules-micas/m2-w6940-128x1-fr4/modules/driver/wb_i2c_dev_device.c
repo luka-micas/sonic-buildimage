@@ -34,9 +34,6 @@ static i2c_dev_device_t i2c_dev_device_data0 = {
     .per_rd_len = 256,
     .per_wr_len = 256,
     .i2c_len = 256,
-    .status_check_type = 1,
-    .test_reg_num = 2,
-    .test_reg = {0xf7, 0xf8},
 };
 
 static i2c_dev_device_t i2c_dev_device_data1 = {

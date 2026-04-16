@@ -62,7 +62,8 @@ __all__ = [
     "DEV_LEDS",
     "fanloc",
     "PLATFORM_POWER_CONF",
-    "POWER_CTRL_CONF"
+    "POWER_CTRL_CONF",
+    "PRODUCT_NAME_CONF"
 ]
 
 
@@ -169,6 +170,9 @@ PLATFORM_POWER_CONF = module_product.PLATFORM_POWER_CONF
 
 # power control config
 POWER_CTRL_CONF = module_product.POWER_CTRL_CONF
+
+# product name config
+PRODUCT_NAME_CONF = module_product.PRODUCT_NAME_CONF
 
 ################################ fancontrol parameter###################################
 

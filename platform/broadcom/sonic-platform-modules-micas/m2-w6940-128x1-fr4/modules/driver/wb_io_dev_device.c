@@ -38,9 +38,6 @@ static io_dev_device_t io_dev_device_data1 = {
     .io_base = 0x900,
     .io_len = 0x100,
     .indirect_addr = 0,
-    .status_check_type = 1,
-    .test_reg_num = 2,
-    .test_reg = {0xf7, 0xf8},
 };
 
 static void wb_io_dev_device_release(struct device *dev)

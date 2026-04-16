@@ -34,9 +34,6 @@ static pci_dev_device_t pcie_dev_device_data0 = {
     .bus_width = 4,
     .check_pci_id = 1,
     .pci_id = 0x1ded7022,
-    .status_check_type = 1,
-    .test_reg_num = 1,
-    .test_reg = {0x08},
 };
 
 static pci_dev_device_t pcie_dev_device_data1 = {
@@ -49,9 +46,6 @@ static pci_dev_device_t pcie_dev_device_data1 = {
     .bus_width = 4,
     .check_pci_id = 1,
     .pci_id = 0x1ded7021,
-    .status_check_type = 1,
-    .test_reg_num = 1,
-    .test_reg = {0x08},
 };
 
 static void wb_pcie_dev_device_release(struct device *dev)
