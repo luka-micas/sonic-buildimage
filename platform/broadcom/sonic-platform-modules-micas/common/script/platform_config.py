@@ -172,7 +172,7 @@ PLATFORM_POWER_CONF = module_product.PLATFORM_POWER_CONF
 POWER_CTRL_CONF = module_product.POWER_CTRL_CONF
 
 # product name config
-PRODUCT_NAME_CONF = module_product.PRODUCT_NAME_CONF
+PRODUCT_NAME_CONF = getattr(module_product, "PRODUCT_NAME_CONF", {})
 
 ################################ fancontrol parameter###################################
 

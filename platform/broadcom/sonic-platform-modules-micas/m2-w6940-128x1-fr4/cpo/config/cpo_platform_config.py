@@ -629,23 +629,11 @@ class Port_Mapping():
     def set_port(self, physical_port, logical_port, speed=None, lane=None, admin=None):
         notify_media_setting = False
         speed = int(speed)
-        port_config = CPO_PLATFORM_PORT_CONFIG.get(default_sku, None)
-        if port_config == None:
-            helper_logger.log_error("CPO_PLATFORM_PORT_CONFIG get none error: {}".format(default_sku))
-            return
-        default_port_info = {}
-        for ports, values in port_config.items():
-            port_index_list = parse_port_range(ports)
-            for port_index in port_index_list:
-                if port_index == physical_port:
-                    default_port_info = values
-                    break;
-
         physical_port_dict = self.port_config_dict.get(physical_port, dict())
         logical_port_dict = physical_port_dict.get(logical_port, dict())
-        old_speed = logical_port_dict.get("speed", default_port_info.get("speed", None))
-        old_lane = logical_port_dict.get("lane", default_port_info.get("lane", None))
-        old_admin = logical_port_dict.get("admin", default_port_info.get("admin", None))
+        old_speed = logical_port_dict.get("speed", None)
+        old_lane = logical_port_dict.get("lane", None)
+        old_admin = logical_port_dict.get("admin", None)
         if speed and old_speed != speed:
             helper_logger.log_debug("port_config update, port_index: {}, speed_change: {} --->>> {}".format(physical_port, old_speed, speed))
             logical_port_dict["speed"] = speed
@@ -659,7 +647,7 @@ class Port_Mapping():
             logical_port_dict["admin"] = admin
         physical_port_dict[logical_port] = logical_port_dict
         if logical_port_dict:
-            helper_logger.log_debug("port_config_need_update, port_index: {}, {} {} {}".format(physical_port, logical_port, physical_port_dict[logical_port], default_port_info))
+            helper_logger.log_debug("port_config_need_update, port_index: {}, {} {}".format(physical_port, logical_port, physical_port_dict[logical_port]))
         self.port_config_dict[physical_port] = physical_port_dict
         return notify_media_setting
     def del_port(self, physical_port, logical_port):

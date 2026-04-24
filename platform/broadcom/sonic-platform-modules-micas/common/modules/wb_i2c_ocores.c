@@ -537,6 +537,7 @@ out:
 static void ocores_process(struct ocores_i2c *i2c, u8 stat)
 {
     struct i2c_msg *msg = i2c->msg;
+    u8 val;
 
     OCORES_I2C_XFER("Enter nr %d.\n", i2c->adap.nr);
     if ((i2c->state == STATE_DONE) || (i2c->state == STATE_ERROR)) {
@@ -573,7 +574,20 @@ static void ocores_process(struct ocores_i2c *i2c, u8 stat)
             goto out;
         }
     } else {
-        msg->buf[i2c->pos++] = oc_getreg(i2c, OCI2C_DATA);
+        val = oc_getreg(i2c, OCI2C_DATA);
+        msg->buf[i2c->pos++] = val;
+        /* SMBus block read: first received byte is payload length. */
+        if ((i2c->pos == 1) && (msg->flags & I2C_M_RECV_LEN)) {
+            if ((val <= 0) || (val > I2C_SMBUS_BLOCK_MAX)) {
+                i2c->state = STATE_ERROR;
+                oc_setreg(i2c, OCI2C_CMD, OCI2C_CMD_STOP);
+                OCORES_I2C_XFER("invalid SMBus block read len: %d, exit.\n", val);
+                goto out;
+            }
+            msg->len += val;
+            OCORES_I2C_XFER("SMBus block read len: %d, adjust msg->len to %d.\n",
+                val, msg->len);
+        }
     }
 
     /* end of msg? */
@@ -607,8 +621,13 @@ static void ocores_process(struct ocores_i2c *i2c, u8 stat)
     }
 
     if (i2c->state == STATE_READ) {
-        oc_setreg(i2c, OCI2C_CMD, i2c->pos == (msg->len-1) ?
-              OCI2C_CMD_READ_NACK : OCI2C_CMD_READ_ACK);
+        /* For SMBus block read, ACK the first length byte explicitly. */
+        if ((i2c->pos == 0) && (msg->flags & I2C_M_RECV_LEN)) {
+            oc_setreg(i2c, OCI2C_CMD, OCI2C_CMD_READ_ACK);
+        } else {
+            oc_setreg(i2c, OCI2C_CMD, i2c->pos == (msg->len - 1) ?
+                  OCI2C_CMD_READ_NACK : OCI2C_CMD_READ_ACK);
+        }
     } else {
         oc_setreg(i2c, OCI2C_DATA, msg->buf[i2c->pos++]);
         oc_setreg(i2c, OCI2C_CMD, OCI2C_CMD_WRITE);
@@ -871,7 +890,7 @@ static int ocores_init(struct device *dev, struct ocores_i2c *i2c)
 
 static u32 ocores_func(struct i2c_adapter *adap)
 {
-    return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL;
+    return I2C_FUNC_I2C | I2C_FUNC_SMBUS_EMUL | I2C_FUNC_SMBUS_BLOCK_DATA;
 }
 
 static const struct i2c_algorithm ocores_algorithm = {

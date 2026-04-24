@@ -262,19 +262,26 @@ def get_secondary_sub_version():
         log_message("%%PLATFORM_BASE: SECONDARY_SUBVERSION_CONFIG is empty, do nothing")
         return NO_CONFIG_ERR_CODE
 
-    val_config = SECONDARY_SUBVERSION_CONFIG.get("get_value").get("loc")
-    for i in range(MAX_RETRY):
-        origin_value = get_sysfs_value(val_config)
-        if not (origin_value.startswith("ERR") or origin_value == ""):
-            break
-        else:
-            log_message("%%PLATFORM_BASE: get value failed, config: %s, log: %s, read count: %s" % (val_config, origin_value, i))
-            time.sleep(0.1)
+    val_config = SECONDARY_SUBVERSION_CONFIG.get("get_value", {}).get("loc")
+    val_configs = val_config if isinstance(val_config, list) else [val_config]
+    origin_value = ""
+    matched_config = None
 
-    if i == MAX_RETRY - 1:
+    for i in range(MAX_RETRY):
+        for candidate in val_configs:
+            origin_value = get_sysfs_value(candidate)
+            if not (origin_value.startswith("ERR") or origin_value == ""):
+                matched_config = candidate
+                break
+        if matched_config is not None:
+            break
+        log_message("%%PLATFORM_BASE: get value failed, config: %s, log: %s, read count: %s" % (val_configs, origin_value, i))
+        time.sleep(0.1)
+
+    if matched_config is None:
         return SECONDARY_SUBVERSION_CONFIG.get("default", READ_FAIL_ERR_CODE)
 
-    log_message("%%PLATFORM_BASE: get value success, value: %s" % origin_value) 
+    log_message("%%PLATFORM_BASE: get value success, config: %s, value: %s" % (matched_config, origin_value))
     decode_config = SECONDARY_SUBVERSION_CONFIG.get("decode_value")
     if decode_config is not None:
         if origin_value in decode_config.keys():

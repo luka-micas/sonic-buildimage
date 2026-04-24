@@ -1036,11 +1036,11 @@ MAC_DEFAULT_PARAM = [
 
 DRIVERLISTS = [
     {"name": "ice", "delay": 0, "removable": 0},
-    {"name": "wb_i2c_i801", "delay": 1},
-    {"name": "i2c_dev", "delay": 0},
+    {"name": "wb_i2c_i801", "delay": 1, "removable": 0},
+    {"name": "i2c_dev", "delay": 0, "removable": 0},
     {"name": "wb_i2c_algo_bit", "delay": 0},
     {"name": "wb_i2c_gpio", "delay": 0},
-    {"name": "i2c_mux", "delay": 0},
+    {"name": "i2c_mux", "delay": 0, "removable": 0},
     {"name": "wb_i2c_gpio_device gpio_sda=181 gpio_scl=180 gpio_chip_name=INTC3001:00 bus_num=1", "delay": 0},
     {"name": "platform_common dfd_my_type=0x40d9", "delay": 0},
     {"name": "wb_logic_dev_common", "delay":0},
@@ -1065,7 +1065,7 @@ DRIVERLISTS = [
     {"name": "wb_ina3221", "delay": 0},
     {"name": "wb_ucd9000", "delay": 0},
     {"name": "wb_xdpe132g5c", "delay": 0},
-    {"name": "firmware_driver_sysfs", "delay": 0},
+#    {"name": "firmware_driver_sysfs", "delay": 0},
     {"name": "wb_rc32312", "delay": 0},
     {"name": "s3ip_sysfs", "delay": 0},
     {"name": "wb_switch_driver", "delay": 0},
@@ -3219,3 +3219,6 @@ SET_FW_MAC_CONF = [
         "check_mac_cfg": {"cmd": "ethtool -e eth0 offset 0 length 6 |grep 0x0000 |  awk -F':' '{gsub(/ /, \":\", $2);print $2}'| sed 's/^[[:space:]]*//' | sed 's/:\s*$//'", "gettype": "cmd_str"},
     }
 ]
+
+SET_MAC_CONF = SET_FW_MAC_CONF
+PRODUCT_NAME_CONF = {}
